@@ -1,16 +1,13 @@
 # coding=utf-8
-import json
 import random
+import requests
 import tweepy
+import inflect
 from dateutil.relativedelta import relativedelta
-from inflect import engine
-from requests import get
 from os import environ
 from string import Template
 from datetime import datetime
 
-_token = environ['ACCESS_TOKEN']
-AUTH = dict(Authorization='token {}'.format(_token))
 GITHUB = 'https://api.github.com'
 MESSAGES = [
     Template(u"🎂🎂🎂 Happy $nth birthday $url !!! 🎂🎂🎂"),
@@ -22,32 +19,49 @@ MESSAGES = [
 
 
 def matching_pull_requests(age):
+    """
+    Query all pull requests that are exactly $age years old.
+    """
     today = datetime.utcnow().date()
     created = today - relativedelta(years=age)
-    print '/search/issues?q=type:pr created:{:%Y-%m-%d} is:open'.format(created)
-    response = get(GITHUB + '/search/issues?q=type:pr created:{:%Y-%m-%d} is:open'.format(created))
+    response = requests.get(GITHUB + '/search/issues?q=type:pr created:{:%Y-%m-%d} is:open'.format(created))
     return response.json()
 
 
-def select_pull_request():
-    age = random.randint(1,5)
+def select_pull_request(age):
+    """
+    Pick a pull request that was created this day 1-5 years ago.
+    """
     return random.choice(matching_pull_requests(age)['items'])
 
 
-def message(url, age):
+def generate_message(url, age):
+    """
+    Generate a message for a pull request.
+    """
     template = random.choice(MESSAGES)
-    nth = unicode(engine().ordinal(age))
+    nth = unicode(inflect.engine().ordinal(age))
     return template.substitute(url=url, n=unicode(age), nth=nth)
 
 
-def get_twitter_auth():
+def load_twitter_auth():
+    """
+    Create a twitter OAuth handler based on the key set in the environment.
+    """
     consumer_key = environ['TWITTER_CONSUMER_KEY']
     consumer_secret = environ['TWITTER_CONSUMER_SECRET']
     return tweepy.OAuthHandler(consumer_key, consumer_secret)
 
 
-def get_twitter_access_token():
-    auth = get_twitter_auth()
+def fetch_twitter_access_token():
+    """
+    Interactively grant the app access to a twitter account via OAuth.
+
+    The access token is valid until the user revokes it.
+
+    Set these variables in the app's environment.
+    """
+    auth = load_twitter_auth()
 
     try:
         redirect_url = auth.get_authorization_url()
@@ -62,12 +76,15 @@ def get_twitter_access_token():
     except tweepy.TweepError:
         print 'Error! Failed to get access token.'
 
-    print 'Access token:  ' + auth.access_token
-    print 'Access secret: ' + auth.access_token_secret
+    print 'TWITTER_ACCESS_KEY:    ' + auth.access_token
+    print 'TWITTER_ACCESS_SECRET: ' + auth.access_token_secret
 
 
 def tweet(message):
-    auth = get_twitter_auth()
+    """
+    Post a message on the bot's twitter
+    """
+    auth = load_twitter_auth()
     key = environ['TWITTER_ACCESS_KEY']
     secret = environ['TWITTER_ACCESS_SECRET']
     auth.set_access_token(key, secret)
@@ -76,10 +93,16 @@ def tweet(message):
     print message
 
 
-if __name__ == '__main__':
-    pr = select_pull_request()
+def activate():
+    """
+    Do the thing.
+    """
+    age = random.randint(1,5)
+    pr = select_pull_request(age)
     url = pr['pull_request']['html_url']
-    created = datetime.strptime(pr['created_at'], '%Y-%m-%dT%H:%M:%SZ')
-    age = int(round((datetime.utcnow() - created).days / 365.0))
-    message = message(url, age)
+    message = generate_message(url, age)
     tweet(message)
+
+
+if __name__ == '__main__':
+    activate()
