@@ -1,6 +1,6 @@
 # Pull request birthday bot
 
-A twitter bot that wishes pull requests happy birthday if they're still open on N years after they were created.
+A twitter bot that wishes pull requests happy birthday if they're still open N years after they were created.
 
 https://twitter.com/PR_birthday_bot
 
