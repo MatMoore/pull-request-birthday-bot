@@ -6,6 +6,14 @@ https://twitter.com/PR_birthday_bot
 
 ## Getting Started
 
+### Prerequisities
+
+[You should have Python 2 and pip installed on your system](http://docs.python-guide.org/en/latest/).
+
+Install the dependencies with `pip install requirements.txt`
+
+### Setup
+
 To set up on a local machine for development/testing:
 
 1. [Set up an app](http://blog.mollywhite.net/twitter-bots-pt2/) for your twitter developer account.
@@ -17,12 +25,6 @@ To set up on a local machine for development/testing:
 4. Set `TWITTER_ACCESS_KEY` and `TWITTER_ACCESS_SECRET` environment variables with the values from step 3.
 
 5. Run `python birthdaybot/birthdaybot.py`
-
-### Prerequisities
-
-[You should have Python 2 and pip installed on your system](http://docs.python-guide.org/en/latest/).
-
-Install the dependencies with `pip install requirements.txt`
 
 ## Deployment
 
