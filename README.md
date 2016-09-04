@@ -29,7 +29,13 @@ pip install requirements.txt
 
 ## Deployment
 
-Not done yet
+First [create a heroku app and push the repo to heroku](https://devcenter.heroku.com/articles/getting-started-with-python#introduction). It will complain about a missing Procfile but it's not needed.
+
+The rest you can do either through the heroku web interface or the cli:
+
+* [set the four twitter environment variables described above](https://devcenter.heroku.com/articles/getting-started-with-python#define-config-vars)
+* [add the heroku scheduler plugin to the app](https://devcenter.heroku.com/articles/scheduler)
+* add a job to the scheduler plugin. It should run `./bin/birthdaybot.py`
 
 ## Contributing
 
