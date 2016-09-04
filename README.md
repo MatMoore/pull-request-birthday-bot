@@ -20,12 +20,9 @@ To set up on a local machine for development/testing:
 
 ### Prerequisities
 
-* Python 2
-* pip
+[You should have Python 2 and pip installed on your system](http://docs.python-guide.org/en/latest/).
 
-```
-pip install requirements.txt
-```
+Install the dependencies with `pip install requirements.txt`
 
 ## Deployment
 
