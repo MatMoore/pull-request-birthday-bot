@@ -41,8 +41,8 @@ def generate_message(url, age):
     Generate a message for a pull request.
     """
     template = random.choice(MESSAGES)
-    nth = unicode(inflect.engine().ordinal(age))
-    return template.substitute(url=url, n=unicode(age), nth=nth)
+    nth = str(inflect.engine().ordinal(age))
+    return template.substitute(url=url, n=str(age), nth=nth)
 
 
 def load_twitter_auth():
@@ -67,18 +67,18 @@ def fetch_twitter_access_token():
     try:
         redirect_url = auth.get_authorization_url()
     except tweepy.TweepError:
-        print 'Error! Failed to get request token.'
+        print('Error! Failed to get request token.')
 
-    print 'Go to {} to grant access'.format(redirect_url)
+    print('Go to {} to grant access'.format(redirect_url))
     verifier = raw_input('Enter the code from twitter: ')
 
     try:
         auth.get_access_token(verifier)
     except tweepy.TweepError:
-        print 'Error! Failed to get access token.'
+        print('Error! Failed to get access token.')
 
-    print 'TWITTER_ACCESS_KEY:    ' + auth.access_token
-    print 'TWITTER_ACCESS_SECRET: ' + auth.access_token_secret
+    print('TWITTER_ACCESS_KEY:    ' + auth.access_token)
+    print('TWITTER_ACCESS_SECRET: ' + auth.access_token_secret)
 
 
 def tweet(message):
@@ -91,7 +91,7 @@ def tweet(message):
     auth.set_access_token(key, secret)
     api = tweepy.API(auth)
     api.update_status(message)
-    print message
+    print(message)
 
 
 def activate():
