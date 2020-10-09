@@ -1,7 +1,7 @@
 certifi==2020.6.20
 chardet==3.0.4
 idna==2.7
-inflect==0.2.5
+inflect==4.1.0
 oauthlib==3.1.0
 PySocks==1.7.1
 python-dateutil==2.5.3
